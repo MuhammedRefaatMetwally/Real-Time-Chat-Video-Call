@@ -97,3 +97,58 @@ export function logout(req, res) {
   res.clearCookie("jwt");
   res.status(200).json({ success: true, message: "Logout Successful" });
 }
+
+export async function onboarding(req, res) {
+  try {
+    const { fullName, bio, nativeLanguage, learningLanguage, location } =
+      req.body;
+    if (
+      !fullName ||
+      !bio ||
+      !nativeLanguage ||
+      !learningLanguage ||
+      !location
+    ) {
+      return res.status(400).json({
+        message: "Please fill all the fields",
+        missingFields: [
+          !fullName && "fullName",
+          !bio && "bio",
+          !nativeLanguage && "nativeLanguage",
+          !learningLanguage && "learningLanguage",
+          !location && "location",
+        ].filter(Boolean),// Filter out undefined values to get true values
+      });
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        ...req.body,
+        isOnboarded: true,
+      },
+      { new: true }
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+   
+    try {
+      await upsertStreamUser({
+        id: updatedUser._id.toString(),
+        name: updatedUser.fullName,
+        image: updatedUser.profilePic || "",
+      });
+    } catch (streamError) {
+      console.log("Error updating Stream user:", streamError.message);
+    }
+
+    res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "Onboarding successful",
+    });
+  } catch (error) {
+    console.log("Error in onboarding controller", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
