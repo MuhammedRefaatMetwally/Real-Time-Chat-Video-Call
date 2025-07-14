@@ -23,7 +23,7 @@ export const protectedRoute = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized - User not found" });
     }
     req.user = user;
-    next();
+    next();   
   } catch (error) {
     console.log("Error in protectedRoute middleware", error);
     return res.status(500).json({ message: "Internal Server Error" });
