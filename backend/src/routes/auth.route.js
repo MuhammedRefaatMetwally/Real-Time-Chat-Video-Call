@@ -6,7 +6,8 @@ import {
   onboarding,
 } from "../controller/auth.controller.js";
 
-import { protectedRoute } from "../middleware/auth.middleware.js";
+
+import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -16,10 +17,9 @@ router.post("/login", login);
 
 router.post("/logout", logout);
 
-router.post("/onboarding", protectedRoute, onboarding);
+router.post("/onboarding", protectRoute, onboarding);
 
-//check if user is authenticated
-router.get("/me", protectedRoute, (req, res) => {
+router.get("/me", protectRoute, (req, res) => {
   res.status(200).json({ success: true, user: req.user });
 });
 
