@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
-import { capitialize } from "@/lib/utils";
+import { capitalize } from "@/lib/utils";
 
 interface Friend {
   _id: string;
@@ -131,7 +131,9 @@ export const FriendCard = ({
 
   const statusConfig = getStatusConfig();
   const isOnline = friend.isOnline;
-
+ console.log("Friend Card Rendered:", {
+    friend: friend,
+  });
   return (
     <div
       className={`group relative bg-card border border-border rounded-2xl overflow-hidden 
@@ -270,7 +272,7 @@ export const FriendCard = ({
           >
             <LanguageFlag language={friend.nativeLanguage} />
             <span className="ml-2">
-              Native: {capitialize(friend.nativeLanguage)}
+              Native: {capitalize(friend.nativeLanguage)}
             </span>
           </Badge>
 
@@ -280,7 +282,7 @@ export const FriendCard = ({
           >
             <LanguageFlag language={friend.learningLanguage} />
             <span className="ml-2">
-              Learning: {capitialize(friend.learningLanguage)}
+              Learning: {capitalize(friend.learningLanguage) || "Not specified"}
             </span>
           </Badge>
         </div>

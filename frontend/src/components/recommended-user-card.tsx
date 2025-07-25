@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
-import { capitialize } from "@/lib/utils";
+import { capitalize } from "@/lib/utils";
 
 interface User {
   _id: string;
@@ -226,7 +226,7 @@ export const RecommendedCard = ({
           >
             <LanguageFlag language={user.nativeLanguage} />
             <span className="ml-2">
-              Native: {capitialize(user.nativeLanguage) || "Not specified"}
+              Native: {capitalize(user.nativeLanguage) || "Not specified"}
             </span>
           </Badge>
 
@@ -237,7 +237,7 @@ export const RecommendedCard = ({
             >
               <LanguageFlag language={user.learningLanguage} />
               <span className="ml-2">
-                Learning: {capitialize(user.learningLanguage)}
+                Learning: {capitalize(user.learningLanguage)}
               </span>
             </Badge>
           )}
