@@ -64,3 +64,22 @@ export async function acceptFriendRequest(requestId) {
   const response = await axiosInstance.put(`/user/friend-request/${requestId}/accept`);
   return response.data;
 }
+
+
+export async function getStreamToken(){
+  try {
+    console.log("Fetching Stream token...");
+    const response = await axiosInstance.get("/chat/token");
+    console.log("Stream token fetched successfully");
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch Stream token:", error);
+    if (error.response?.status === 401) {
+      throw new Error("Authentication required. Please log in again.");
+    } else if (error.response?.status === 500) {
+      throw new Error("Server error. Please try again later.");
+    } else {
+      throw new Error("Failed to connect to chat service. Please check your connection.");
+    }
+  }
+}

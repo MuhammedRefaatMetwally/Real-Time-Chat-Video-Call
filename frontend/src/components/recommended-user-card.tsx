@@ -116,15 +116,15 @@ export const RecommendedCard = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/5 dark:to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Subtle gradient overlay - moved behind content */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/5 dark:to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       {/* Header with improved badges */}
-      <div className="relative p-6">
+      <div className="relative p-6 z-10">
         {/* New User Badge */}
         {isNewUser() && (
           <div
-            className={`absolute top-4 right-4 z-10 transition-all duration-300 ${
+            className={`absolute top-4 right-4 z-20 transition-all duration-300 ${
               isHovered ? "scale-105" : "scale-100"
             }`}
           >
@@ -257,12 +257,12 @@ export const RecommendedCard = ({
         </div>
       </div>
 
-      {/* Enhanced Action Section */}
-      <div className="px-6 pb-6">
+      {/* Enhanced Action Section - Fixed z-index and pointer events */}
+      <div className="px-6 pb-6 relative z-20">
         <Button
           onClick={() => onSendRequest(user._id)}
           disabled={hasRequestBeenSent || isPending}
-          className={`w-full h-12 font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${
+          className={`w-full h-12 font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 relative z-30 ${
             hasRequestBeenSent
               ? "bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-2 border-emerald-500/20 dark:border-emerald-500/30 cursor-not-allowed hover:shadow-lg hover:translate-y-0"
               : isPending

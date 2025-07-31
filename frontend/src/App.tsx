@@ -100,6 +100,7 @@ const App = () => {
   return (
     <div className="h-screen" data-theme="night">
       <Routes>
+        {/* Home Route */}
         <Route
           path="/"
           element={
@@ -114,6 +115,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Chat Routes - FIXED TO MATCH NAVIGATION */}
         <Route
           path="/chat"
           element={
@@ -129,7 +132,23 @@ const App = () => {
           }
         />
         <Route
-          path="/call"
+          path="/chat/:id"
+          element={
+            <ProtectedRoute
+              isAuthenticated={isAuthenticated}
+              user={user}
+              requireOnboarding={true}
+            >
+              <AppLayout>
+                <ChatPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Call Routes - FIXED TO MATCH NAVIGATION */}
+        <Route
+          path="/call/:id"
           element={
             <ProtectedRoute
               isAuthenticated={isAuthenticated}
@@ -142,6 +161,29 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+       
+
+        {/* Profile Route - NEW */}
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute
+              isAuthenticated={isAuthenticated}
+              user={user}
+              requireOnboarding={true}
+            >
+              <AppLayout>
+                {/* You'll need to create a ProfilePage component */}
+                <div className="p-8 text-center">
+                  <h1 className="text-2xl font-bold">Profile Page</h1>
+                  <p className="text-muted-foreground mt-2">Profile page coming soon...</p>
+                </div>
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Notifications Route - FIXED PATH */}
         <Route
           path="/notification"
           element={
@@ -156,6 +198,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Existing Routes */}
         <Route
           path="/onboarding"
           element={
@@ -180,6 +224,8 @@ const App = () => {
             </PublicRoute>
           }
         />
+
+        {/* Catch-all Route */}
         <Route
           path="*"
           element={

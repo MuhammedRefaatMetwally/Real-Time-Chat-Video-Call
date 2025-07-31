@@ -131,9 +131,48 @@ export const FriendCard = ({
 
   const statusConfig = getStatusConfig();
   const isOnline = friend.isOnline;
- console.log("Friend Card Rendered:", {
+
+  // Add debugging for button clicks
+  const handleMessageClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Message button clicked for friend:", friend._id);
+    console.log("onMessage function:", onMessage);
+    onMessage?.(friend._id);
+  };
+
+  const handleCallClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Call button clicked for friend:", friend._id);
+    console.log("onCall function:", onCall);
+    onCall?.(friend._id);
+  };
+
+  const handleVideoCallClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Video call button clicked for friend:", friend._id);
+    console.log("onVideoCall function:", onVideoCall);
+    onVideoCall?.(friend._id);
+  };
+
+  const handleViewProfileClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("View profile clicked for friend:", friend._id);
+    console.log("onViewProfile function:", onViewProfile);
+    onViewProfile?.(friend._id);
+  };
+
+  console.log("Friend Card Rendered:", {
     friend: friend,
+    onMessage: !!onMessage,
+    onCall: !!onCall,
+    onVideoCall: !!onVideoCall,
+    onViewProfile: !!onViewProfile,
   });
+
   return (
     <div
       className={`group relative bg-card border border-border rounded-2xl overflow-hidden 
@@ -142,13 +181,13 @@ export const FriendCard = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/5 dark:to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Subtle gradient overlay - FIXED: pointer-events-none to prevent blocking clicks */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 dark:from-primary/5 dark:to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       {/* Header with improved spacing */}
       <div className="relative p-6">
-        {/* Actions menu - improved positioning */}
-        <div className="absolute top-4 right-4 z-10">
+        {/* Actions menu - improved positioning and z-index */}
+        <div className="absolute top-4 right-4 z-20">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -158,14 +197,14 @@ export const FriendCard = ({
                   transition-all duration-300 ${
                     isHovered ? "opacity-100 scale-100" : "opacity-0 scale-90"
                   }
-                  hover:bg-background/95 dark:hover:bg-background hover:shadow-lg dark:hover:shadow-xl`}
+                  hover:bg-background/95 dark:hover:bg-background hover:shadow-lg dark:hover:shadow-xl relative z-20`}
               >
                 <MoreVerticalIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="end" className="w-48 z-50">
               <DropdownMenuItem
-                onClick={() => onViewProfile?.(friend._id)}
+                onClick={handleViewProfileClick}
                 className="cursor-pointer"
               >
                 <UserPlusIcon className="h-4 w-4 mr-2" />
@@ -173,7 +212,7 @@ export const FriendCard = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => onCall?.(friend._id)}
+                onClick={handleCallClick}
                 className="cursor-pointer"
               >
                 <PhoneIcon className="h-4 w-4 mr-2" />
@@ -181,7 +220,7 @@ export const FriendCard = ({
               </DropdownMenuItem>
               {onVideoCall && (
                 <DropdownMenuItem
-                  onClick={() => onVideoCall(friend._id)}
+                  onClick={handleVideoCallClick}
                   className="cursor-pointer"
                 >
                   <VideoIcon className="h-4 w-4 mr-2" />
@@ -301,14 +340,14 @@ export const FriendCard = ({
         </div>
       </div>
 
-      {/* Action Buttons - enhanced design */}
-      <div className="px-6 pb-6">
+      {/* Action Buttons - FIXED: enhanced design with proper z-index and event handling */}
+      <div className="px-6 pb-6 relative z-10">
         <div className="flex gap-3">
           <Button
-            onClick={() => onMessage?.(friend._id)}
+            onClick={handleMessageClick}
             className="flex-1 h-12 bg-gradient-to-r from-primary to-primary/90 dark:from-primary dark:to-primary/95 text-primary-foreground 
               hover:from-primary/90 hover:to-primary/80 dark:hover:from-primary/95 dark:hover:to-primary/85 transition-all duration-300 font-semibold
-              shadow-lg hover:shadow-xl hover:shadow-primary/25 dark:hover:shadow-primary/20 hover:-translate-y-0.5"
+              shadow-lg hover:shadow-xl hover:shadow-primary/25 dark:hover:shadow-primary/20 hover:-translate-y-0.5 relative z-10 cursor-pointer"
           >
             <MessageCircleIcon className="w-5 h-5 mr-2" />
             Message
@@ -318,12 +357,12 @@ export const FriendCard = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={() => onCall?.(friend._id)}
+                  onClick={handleCallClick}
                   variant="outline"
                   size="icon"
                   className="h-12 w-12 border-2 hover:bg-accent hover:text-accent-foreground 
                     hover:border-primary/50 dark:hover:border-primary/40 transition-all duration-300 hover:-translate-y-0.5
-                    hover:shadow-lg dark:hover:shadow-xl"
+                    hover:shadow-lg dark:hover:shadow-xl relative z-10 cursor-pointer"
                 >
                   <PhoneIcon className="w-5 h-5" />
                 </Button>
@@ -339,12 +378,12 @@ export const FriendCard = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => onVideoCall(friend._id)}
+                    onClick={handleVideoCallClick}
                     variant="outline"
                     size="icon"
                     className="h-12 w-12 border-2 hover:bg-accent hover:text-accent-foreground 
                       hover:border-primary/50 dark:hover:border-primary/40 transition-all duration-300 hover:-translate-y-0.5
-                      hover:shadow-lg dark:hover:shadow-xl"
+                      hover:shadow-lg dark:hover:shadow-xl relative z-10 cursor-pointer"
                   >
                     <VideoIcon className="w-5 h-5" />
                   </Button>

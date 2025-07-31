@@ -1,41 +1,98 @@
-import { Link } from "react-router"
-import { UsersIcon, SparklesIcon, TrendingUpIcon, MessageCircleIcon, GlobeIcon, CalendarIcon, StarIcon, ArrowRightIcon } from "lucide-react"
-import { useFriends } from "../hooks/use-friends"
-import { useRecommendedUsers } from "../hooks/use-recommended-users"
-import { useOutgoingFriendRequests } from "../hooks/use-outgoing-friend-requests"
-import { useSendFriendRequest } from "../hooks/use-send-friend-request"
-import { useOutgoingRequestsTracker } from "../hooks/use-outgoing-requests-tracker"
-import { FriendCard } from "../components/friend-card"
-import { RecommendedCard } from "../components/recommended-user-card"
-import { FriendCardSkeleton, RecommendedCardSkeleton } from "../components/loading-states"
-import { NoFriendsEmptyState, NoRecommendationsEmptyState } from "../components/empty-states"
-import { useUser } from "@/hooks/useUser"
-import UserStatsHero from "@/components/user-stats-hero"
-
-// Enhanced UserStatsHero Component
-interface UserStatsProps {
-  friendsCount: number
-  joinDate?: string
-  location?: string
-}
-
+import { Link, useNavigate } from "react-router";
+import {
+  UsersIcon,
+  SparklesIcon,
+  TrendingUpIcon,
+  MessageCircleIcon,
+  GlobeIcon,
+  CalendarIcon,
+  StarIcon,
+  ArrowRightIcon,
+} from "lucide-react";
+import { useFriends } from "../hooks/use-friends";
+import { useRecommendedUsers } from "../hooks/use-recommended-users";
+import { useOutgoingFriendRequests } from "../hooks/use-outgoing-friend-requests";
+import { useSendFriendRequest } from "../hooks/use-send-friend-request";
+import { useOutgoingRequestsTracker } from "../hooks/use-outgoing-requests-tracker";
+import { FriendCard } from "../components/friend-card";
+import { RecommendedCard } from "../components/recommended-user-card";
+import {
+  FriendCardSkeleton,
+  RecommendedCardSkeleton,
+} from "../components/loading-states";
+import {
+  NoFriendsEmptyState,
+  NoRecommendationsEmptyState,
+} from "../components/empty-states";
+import { useUser } from "@/hooks/useUser";
+import UserStatsHero from "@/components/user-stats-hero";
 
 const HomePage = () => {
-  const { data: friends = [], isLoading: loadingFriends } = useFriends()
-  const { data: recommendedUsers = [], isLoading: loadingUsers } = useRecommendedUsers()
-  const { data: outgoingFriendReqs } = useOutgoingFriendRequests()
-  const { mutate: sendRequestMutation, isPending } = useSendFriendRequest()
-  const { user } = useUser()
-  const outgoingRequestsIds = useOutgoingRequestsTracker(outgoingFriendReqs || [])
+  const { data: friends = [], isLoading: loadingFriends } = useFriends();
+  const { data: recommendedUsers = [], isLoading: loadingUsers } =
+    useRecommendedUsers();
+  const { data: outgoingFriendReqs } = useOutgoingFriendRequests();
+  const { mutate: sendRequestMutation, isPending } = useSendFriendRequest();
+  const { user } = useUser();
+  const outgoingRequestsIds = useOutgoingRequestsTracker(
+    outgoingFriendReqs || []
+  );
+  const navigate = useNavigate();
+
+  // Fixed navigation handlers with debugging
+  const handleMessage = (friendId: string) => {
+    console.log("Navigating to chat:", friendId);
+    console.log("Navigate function:", navigate);
+    
+    try {
+      navigate(`/chat/${friendId}`);
+      console.log("Navigation successful");
+    } catch (error) {
+      console.error("Navigation error:", error);
+    }
+  };
+
+  const handleCall = (friendId: string) => {
+    console.log("Navigating to voice call:", friendId);
+    
+    try {
+      navigate(`/call/voice/${friendId}`);
+      console.log("Voice call navigation successful");
+    } catch (error) {
+      console.error("Voice call navigation error:", error);
+    }
+  };
+
+  const handleVideoCall = (friendId: string) => {
+    console.log("Navigating to video call:", friendId);
+    
+    try {
+      navigate(`/call/video/${friendId}`);
+      console.log("Video call navigation successful");
+    } catch (error) {
+      console.error("Video call navigation error:", error);
+    }
+  };
+
+  const handleViewProfile = (friendId: string) => {
+    console.log("Navigating to profile:", friendId);
+    
+    try {
+      navigate(`/profile/${friendId}`);
+      console.log("Profile navigation successful");
+    } catch (error) {
+      console.error("Profile navigation error:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950/20">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Enhanced Hero Stats Section */}
-        <UserStatsHero 
-          friendsCount={friends.length} 
-          joinDate={user?.createdAt} 
-          location={user?.location} 
+        <UserStatsHero
+          friendsCount={friends.length}
+          joinDate={user?.createdAt}
+          location={user?.location}
         />
 
         {/* Quick Actions Bar */}
@@ -48,8 +105,12 @@ const HomePage = () => {
               <UsersIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100">Friend Requests</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Manage your connections</p>
+              <p className="font-semibold text-gray-900 dark:text-gray-100">
+                Friend Requests
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Manage your connections
+              </p>
             </div>
             {outgoingFriendReqs && outgoingFriendReqs.length > 0 && (
               <div className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full animate-pulse">
@@ -67,8 +128,12 @@ const HomePage = () => {
               <MessageCircleIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100">Start Chatting</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Practice with friends</p>
+              <p className="font-semibold text-gray-900 dark:text-gray-100">
+                Start Chatting
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Practice with friends
+              </p>
             </div>
             <ArrowRightIcon className="w-4 h-4 text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 group-hover:translate-x-1 transition-all duration-300" />
           </Link>
@@ -94,11 +159,14 @@ const HomePage = () => {
                   </p>
                 </div>
               </div>
-              
+
               {friends.length > 0 && (
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <StarIcon className="w-4 h-4 text-yellow-500" />
-                  <span>You have {friends.length} active learning partner{friends.length !== 1 ? 's' : ''}</span>
+                  <span>
+                    You have {friends.length} active learning partner
+                    {friends.length !== 1 ? "s" : ""}
+                  </span>
                 </div>
               )}
             </div>
@@ -117,7 +185,14 @@ const HomePage = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {friends.map((friend) => (
-                <FriendCard key={friend._id} friend={friend} />
+                <FriendCard
+                  key={friend._id}
+                  friend={friend}
+                  onMessage={handleMessage}
+                  onCall={handleCall}
+                  onVideoCall={handleVideoCall}
+                  onViewProfile={handleViewProfile}
+                />
               ))}
             </div>
           )}
@@ -139,15 +214,18 @@ const HomePage = () => {
                     Discover New Partners
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 text-lg mt-1">
-                    Handpicked language exchange partners based on your interests
+                    Handpicked language exchange partners based on your
+                    interests
                   </p>
                 </div>
               </div>
-              
+
               {recommendedUsers.length > 0 && (
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <TrendingUpIcon className="w-4 h-4 text-green-500" />
-                  <span>{recommendedUsers.length} perfect matches found for you</span>
+                  <span>
+                    {recommendedUsers.length} perfect matches found for you
+                  </span>
                 </div>
               )}
             </div>
@@ -166,7 +244,7 @@ const HomePage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedUsers.map((user) => {
-                const hasRequestBeenSent = outgoingRequestsIds.has(user._id)
+                const hasRequestBeenSent = outgoingRequestsIds.has(user._id);
                 return (
                   <RecommendedCard
                     key={user._id}
@@ -175,14 +253,14 @@ const HomePage = () => {
                     onSendRequest={sendRequestMutation}
                     isPending={isPending}
                   />
-                )
+                );
               })}
             </div>
           )}
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;
