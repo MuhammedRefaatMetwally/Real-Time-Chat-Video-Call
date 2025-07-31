@@ -58,7 +58,7 @@ Big thanks to **Codesistency** for the in-depth explanation and clean structure!
    ```bash
    cd backend
    npm install
-   npm start
+   npm run dev
    ```
 
 3. **Setup Frontend:**
@@ -68,5 +68,3 @@ Big thanks to **Codesistency** for the in-depth explanation and clean structure!
    npm install
    npm run dev
    ```
-
-Let me know if you want to include screenshots, environment variable setup instructions, or a live demo link.
